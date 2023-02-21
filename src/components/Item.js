@@ -1,8 +1,16 @@
-const Item = () => {
+import React from "react";
+import PropTypes from "prop-types";
+const Item = ({ title, amount }) => {
   return (
     <li>
-      พักโรงแรม <span>-5000</span>
+      {title} <span>{amount}</span>
     </li>
   );
 };
+
+Item.prototype = {
+  title: PropTypes.string,
+  amount: PropTypes.number,
+};
+
 export default Item;
