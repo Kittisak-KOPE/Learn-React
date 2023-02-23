@@ -1,16 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./FormComponent.css";
-const FormComponent = () => {
+import { v4 as uuidv4 } from "uuid";
+const FormComponent = (props) => {
+  const [title, setTitle] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [formValid, setFormValid] = useState(false);
+
   const inputTitle = (event) => {
-    console.log(event.target.value);
+    setTitle(event.target.value);
   };
   const inputAmount = (event) => {
-    console.log(event.target.value);
+    setAmount(event.target.value);
   };
   const saveItem = (event) => {
     event.preventDefault();
-    console.log("เพื่มข้อมูลเรียบร้อย");
+    const itemData = {
+      id: uuidv4(),
+      title: title,
+      amount: Number(amount),
+    };
+    props.onAddItem(itemData);
+    setTitle("");
+    setAmount(0);
   };
+
+  useEffect(() => {
+    const checkData = title.trim().length > 0 && amount !== 0;
+    setFormValid(checkData);
+  }, [title, amount]);
+
   return (
     <div>
       <form onSubmit={saveItem}>
@@ -20,6 +38,7 @@ const FormComponent = () => {
             type="text"
             placeholder="ระบุชื่อรายการของคุณ"
             onChange={inputTitle}
+            value={title}
           ></input>
         </div>
         <div className="form-control">
@@ -28,10 +47,11 @@ const FormComponent = () => {
             type="number"
             placeholder="(+ รายรับ, - รายจ่าย)"
             onChange={inputAmount}
+            value={amount}
           ></input>
         </div>
         <div>
-          <button className="btn" type="submit">
+          <button className="btn" type="submit" disabled={!formValid}>
             เพื่มข้อมูล
           </button>
         </div>
